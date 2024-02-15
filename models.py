@@ -1,59 +1,78 @@
 from datetime import datetime
 
-from sqlalchemy import MetaData, Column, ForeignKey, Integer, String, TIMESTAMP
+from sqlalchemy import MetaData, Table, Column, Integer, String, TIMESTAMP, ForeignKey, JSON
 
-from database import Base
+metadata = MetaData()
 
+status = Table(
+    "status",
+    metadata,
+    Column("id", Integer, primary_key=True, autoincrement=True),
+    Column("name", String, nullable=False),
+    Column("permissions", JSON),
+)
 
-class Users(Base):
-    __tablename__ = "users"
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    email = Column(String, nullable=False)
-    username = Column(String, nullable=False)
-    password = Column(String, nullable=False)
-    registered_at = Column(TIMESTAMP, default=datetime.utcnow)
-    favorite_product_id = Column(Integer, ForeignKey("products.id"))
-    status = Column(String, nullable=False)
-class Shops(Base):
-    __tablename__ = "shops"
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    name = Column(String, nullable=False)
-    Description = Column(String,nullable=False)
-    email = Column(String, nullable=False)
+users = Table(
+    "users",
+    metadata,
+    Column("id", Integer, primary_key=True, autoincrement=True),
+    Column("email", String, nullable=False),
+    Column("username", String, nullable=False),
+    Column("password", String, nullable=False),
+    Column("registered_at", TIMESTAMP, default=datetime.utcnow),
+    Column("status_id", Integer, ForeignKey("status.id")),
+    Column("favorite_product_id", Integer, ForeignKey("products.id")),
+)
 
-class Products(Base):
-    __tablename__ = "products"
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    name = Column(String, nullable=False)
-    price = Column(Integer, nullable=False)
-    weight = Column(Integer, nullable=False)
-    colour = Column(Integer, nullable=False)
-    Description = Column(String,nullable=False)
-    image_url = Column(String)
-    registered_at = Column(TIMESTAMP, default=datetime.utcnow)
-    shop_id = Column(Integer, ForeignKey("shops.id"))
-    category_id = Column(Integer, ForeignKey("category.id"))
+shops = Table(
+    "shops",
+    metadata,
+    Column("id", Integer, primary_key=True, autoincrement=True),
+    Column("name", String, nullable=False),
+    Column("Description", String,nullable=False),
+    Column("email", String, nullable=False),
+)
 
-class Category(Base):
-    __tablename__ = "category"
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    name = Column(String, nullable=False)
-    Description = Column(String,nullable=False)
-    number_of_products = Column(Integer, nullable=False)
+products = Table(
+    "products",
+    metadata,
+    Column("id", Integer, primary_key=True, autoincrement=True),
+    Column("name", String, nullable=False),
+    Column("price", Integer, nullable=False),
+    Column("weight", Integer, nullable=False),
+    Column("colour", Integer, nullable=False),
+    Column("Description", String,nullable=False),
+    Column("image_url", String),
+    Column("registered_at", TIMESTAMP, default=datetime.utcnow),
+    Column("shop_id", Integer, ForeignKey("shops.id")),
+    Column("category_id", Integer, ForeignKey("category.id")),
+)
 
+category = Table(
+    "category",
+    metadata,
+    Column("id", Integer, primary_key=True, autoincrement=True),
+    Column("name", String, nullable=False),
+    Column("Description", String,nullable=False),
+    Column("number_of_products", Integer, nullable=False)
+)
 
-class Rewies_shops(Base):
-    __tablename__ = "rewies_shops"
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    users_id = Column(Integer, ForeignKey('users.id'))
-    shop_id = Column(Integer, ForeignKey('shops.id'))
-    mark = Column(Integer,nullable=False)
-    description = Column(String)
+reviews_shops = Table(
+    "reviews_shops",
+    metadata,
+    Column("id", Integer, primary_key=True, autoincrement=True),
+    Column("users_id", Integer, ForeignKey('users.id')),
+    Column("shop_id", Integer, ForeignKey('shops.id')),
+    Column("mark", Integer,nullable=False),
+    Column("description", String),
+)
 
-class Rewies_products(Base):
-    __tablename__ = "rewies_products"
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    users_id = Column(Integer, ForeignKey('users.id'))
-    products_id = Column(Integer, ForeignKey('products.id'))
-    mark = Column(Integer,nullable=False)
-    description = Column(String)
+reviews_products = Table(
+    "reviews_products",
+    metadata,
+    Column("id", Integer, primary_key=True, autoincrement=True),
+    Column("users_id", Integer, ForeignKey('users.id')),
+    Column("products_id", Integer, ForeignKey('products.id')),
+    Column("mark", Integer,nullable=False),
+    Column("description", String),
+)
