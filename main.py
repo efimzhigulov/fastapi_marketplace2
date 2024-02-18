@@ -1,9 +1,9 @@
-from typing import AsyncGenerator, Annotated
+from typing import AsyncGenerator, Annotated, Union
 
 import pytest
 from fastapi import FastAPI, Depends
 from httpx import AsyncClient
-from sqlalchemy import select
+from sqlalchemy import select, insert
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.sql import crud
 
@@ -11,6 +11,8 @@ from database import init_db, get_session
 from models import users
 #from database import database
 from fastapi.testclient import TestClient
+
+from schemas import UserCreate
 
 app = FastAPI(
     title="Marketplace")
@@ -40,6 +42,15 @@ async def get_users(session: AsyncSession = Depends(get_session)):
         result = await session.execute(query)
         return result.all()
 
+
+@app.post("/post_users")
+async def add_users(new_operation: UserCreate, session: AsyncSession = Depends(get_session)):
+    stmt = insert(users).values(**new_operation.dict())
+    await session.execute(stmt)
+    await session.commit()
+    return new_operation
+
+
 @pytest.fixture(scope="session")
 async def ac() -> AsyncGenerator[AsyncClient, None]:
     async with AsyncClient(app=app, base_url="http://test") as ac:
@@ -54,8 +65,11 @@ async def test_get_users(ac: AsyncClient):
     assert response.status_code == 200
 
 
-@app.get("/items/")
-async def read_items(commons: Annotated[dict, Depends(get_session)]):
-    return {"message": "Hello Items!", "params": commons}
+
+
+
+# @app.get("/items/")
+# async def read_items(commons: Annotated[dict, Depends()]):
+#     return {"message": "Hello Items!", "params": commons}
 
 
