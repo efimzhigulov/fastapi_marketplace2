@@ -9,3 +9,12 @@ class UserCreate(BaseModel):
     username: str
     password: str
     registered_at: datetime
+
+class OrderCreate(BaseModel):
+    id: int
+    status: str
+    delivery_address: str
+    registered_at: datetime
+    users_id: int
+    products_id: int
+
