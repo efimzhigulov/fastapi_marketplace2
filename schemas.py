@@ -15,6 +15,5 @@ class OrderCreate(BaseModel):
     status: str
     delivery_address: str
     registered_at: datetime
-    users_id: int
-    products_id: int
+
 

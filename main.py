@@ -6,6 +6,7 @@ from database import get_session
 from emit_log_direct import rabbit
 from models import users, orders
 from schemas import OrderCreate
+import subprocess
 
 logging.basicConfig(
     level=logging.DEBUG,

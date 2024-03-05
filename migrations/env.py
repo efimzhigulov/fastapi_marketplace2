@@ -13,7 +13,7 @@ from models import metadata
 config = context.config
 
 section = config.config_ini_section
-config.set_section_option(section, "DB_HOST", 'postgres_db')
+config.set_section_option(section, "DB_HOST", 'db')
 config.set_section_option(section, "DB_PORT", '5432')
 config.set_section_option(section, "DB_USER", 'postgres')
 config.set_section_option(section, "DB_NAME", 'postgres')

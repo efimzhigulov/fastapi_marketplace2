@@ -7,16 +7,28 @@
 # You can add other services your application may depend on here, such as a
 # database or a cache. For examples, see the Awesome Compose repository:
 # https://github.com/docker/awesome-compose
+version: "3.2"
 services:
+  rabbitmq:
+    image: rabbitmq:3.10.7-management
+    hostname: rabbitmq
+    restart: always
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+    ports:
+      - 15672:15672
+
+
   server:
     build:
       context: .
     ports:
       - 8000:8000
-
     depends_on:
       db:
         condition: service_healthy
+
   db:
     image: postgres
     restart: always
@@ -25,9 +37,9 @@ services:
       - db-password
     volumes:
       - db-data:/var/lib/postgresql/data
-    env_file:
-      - .env
-
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_PASSWORD_FILE=/run/secrets/db-password
     expose:
       - 5432
     healthcheck:
@@ -40,4 +52,6 @@ volumes:
 secrets:
   db-password:
     file: db/password.txt
+
+
 

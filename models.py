@@ -12,8 +12,7 @@ orders = Table(
     Column("status", String, nullable=False),
     Column("delivery_address", String, nullable=False),
     Column("registered_at", TIMESTAMP, default=datetime.utcnow),
-    Column("users_id", Integer, ForeignKey("users.id")),
-    Column("products_id", Integer, ForeignKey("products.id")),
+
 
 
 )

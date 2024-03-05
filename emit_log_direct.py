@@ -7,9 +7,9 @@ def rabbit(sev,args):
      очередей и выполняет действия, такие как подтверждение заказа,
      обновление статуса и отправка уведомлений клиентам. Обработчик
      запускается командой:
-     python receive_logs_direct.py new_order order_processing notification > logs_from_rabbit.log"""
+     python consumer.py new_order order_processing notification > logs_from_rabbit.log"""
     connection = pika.BlockingConnection(
-        pika.ConnectionParameters(host='localhost'))
+        pika.ConnectionParameters(host='rabbitmq'))
     channel = connection.channel()
 
     channel.exchange_declare(exchange='direct_logs', exchange_type='direct')

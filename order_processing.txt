@@ -1,2 +1,3 @@
 order_processing: The order's status: b'processed'
 order_processing: The order's status: b'processed'
+order_processing: The order's status: b'string'

@@ -1,2 +1,3 @@
 new_order: Order with id b'41' created
 new_order: Order with id b'42' created
+new_order: Order with id b'3' created
